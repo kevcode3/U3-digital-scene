@@ -5,6 +5,8 @@ hide();
 
 //Function Calls
 drawBackground();
+drawAllStars(30,10,20);
+drawMoon(randomNumber(50,220),randomNumber(50,100),randomNumber(50,100),randomNumber(0,100));
 
 function drawBackground(){
   penRGB(5,75,5);
@@ -21,4 +23,55 @@ function drawBackground(){
   penUp();
   }
   
+}
+
+function drawMoon(x, y, size, fullness){
+  moveTo(x,y+size/2);
+  penColor("Black");
+  dot(size/2);
+  
+  penWidth(1);
+  penRGB(255,255,225);
+  var h;
+  for(var i = 0; i < size; i++){
+    moveTo(x-size/2, y+i);
+    turnTo(90);
+    h = Math.abs(i);
+    moveForward((size/2)-Math.sqrt(h*(size-h)));
+    penDown();
+    moveForward((Math.sqrt(4*h*(size-h)))*(fullness/100));
+    penUp();
+  }
+}
+
+function drawStarSide(n) {
+  penDown();
+  for (var i = 1; i < n; i++) 
+  {
+    penRGB(250,250,250,1/i);
+    moveForward(1);
+  }
+  penUp();
+  turnLeft(180);
+  moveForward(n-1);
+}
+
+function drawStar(n) {
+  penWidth(3);
+  penDown();
+  drawStarSide(n);
+  turnLeft();
+  drawStarSide(n);
+  turnLeft();
+  drawStarSide(n);
+  turnLeft();
+  drawStarSide(n);
+  turnLeft();
+}
+
+function drawAllStars(amount, minLength, maxLength) {
+  for (var i = 0; i < amount; i++) {
+    moveTo(randomNumber(0,320),randomNumber(0,280-maxLength));
+    drawStar(randomNumber(minLength,maxLength));
+  }
 }
