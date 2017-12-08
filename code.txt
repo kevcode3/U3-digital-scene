@@ -7,6 +7,7 @@ hide();
 drawBackground();
 drawAllStars(30,10,20);
 drawMoon(randomNumber(50,220),randomNumber(50,100),randomNumber(50,100),randomNumber(0,100));
+drawAllBuildings(0.0025);
 
 function drawBackground(){
   penRGB(5,75,5);
@@ -32,14 +33,12 @@ function drawMoon(x, y, size, fullness){
   
   penWidth(1);
   penRGB(255,255,225);
-  var h;
   for(var i = 0; i < size; i++){
     moveTo(x-size/2, y+i);
     turnTo(90);
-    h = Math.abs(i);
-    moveForward((size/2)-Math.sqrt(h*(size-h)));
+    moveForward((size/2)-Math.sqrt(i*(size-i)));
     penDown();
-    moveForward((Math.sqrt(4*h*(size-h)))*(fullness/100));
+    moveForward((Math.sqrt(4*i*(size-i)))*(fullness/100));
     penUp();
   }
 }
@@ -73,5 +72,93 @@ function drawAllStars(amount, minLength, maxLength) {
   for (var i = 0; i < amount; i++) {
     moveTo(randomNumber(0,320),randomNumber(0,280-maxLength));
     drawStar(randomNumber(minLength,maxLength));
+  }
+}
+
+function drawBuilding(grey,x,y,w,h){
+  //Building Base
+  penRGB(grey,grey,grey,1);
+  drawRectangle(w,h,x,y);
+  
+  //Windows
+  var numPerRow = randomNumber(3,5);
+  var winWidth = w/(2*numPerRow + 1);
+  var numPerCol = randomNumber(3,9);
+  var winHeight = Math.floor(h/(2*numPerCol + 1));
+  penWidth(1);
+  for(var i = 0; i < numPerCol; i++){
+    moveTo(x,y - 2 * i * winHeight - winHeight);
+    for(var j = 0; j < numPerRow; j++){
+      turnTo(90);
+      moveForward(winWidth);
+      if(randomNumber(1,10) == 1){
+          penRGB(2,2,0);
+        }else{
+          penColor("Yellow");
+        }
+      for(var k = 0; k < winHeight; k++){
+        penDown();
+        moveForward(winWidth);
+        penUp();
+        turnLeft(90);
+        moveForward(1);
+        turnLeft(90);
+        moveForward(winWidth);
+        turnTo(90);
+      }
+      turnRight(90);
+      moveForward(winHeight);
+      turnTo(90);
+      moveForward(winWidth);
+    }
+  }
+  
+  //Roof
+  penRGB(grey,grey,grey,1);
+  drawRoof(x,y,w,h);
+}
+
+function drawAllBuildings(population){
+  var gen,w,h,x,y;
+  for(var i = 0; i < 270; i++){
+    moveTo(0,280+i);
+    turnTo(90);
+    for(var j = 0; j < 320; j++){
+      moveForward(1);
+      gen = randomNumber(0,100000);
+      if(gen < population*100000){
+        w = randomNumber(10,25);
+        h = randomNumber(25,75);
+        x = j - w/2;
+        y = 280 + i;
+        drawBuilding(randomNumber(100,200),x,y,w,h);
+      }
+    }
+  }
+}
+
+function drawRoof(x,y,w,h){
+  var rh = h/5
+  var lim = randomNumber(3,6);
+  var max = w;
+  var nWidth, nHeight = 0;
+  y = y - h;
+  for(var i = 0; i < lim; i++){
+  nWidth = randomNumber(1,max);
+  nHeight = randomNumber(1,rh);
+  drawRectangle(nWidth,nHeight,(x+(w-nWidth)/2),y);
+  max = nWidth;
+  y = y - nHeight;
+  }
+}
+
+function drawRectangle(width,height,x,y){
+  penWidth(2);
+  for(var i = 0; i < height; i++){
+    moveTo(x,y-i);
+    turnTo(90);
+    penDown();
+    moveForward(width);
+    penUp();
   }
 }
